@@ -24,13 +24,13 @@ export default class ImageButton extends React.Component {
     this.input.click();
   }
 
-
   /*
   This is an example of how an image button can be added
   on the side control. This Button handles the image addition locally
   by creating an object url. You can override this method to upload
   images to your server first, then get the image url in return and then
   add to the editor.
+
   */
   onChange(e) {
     // e.preventDefault();
@@ -38,15 +38,27 @@ export default class ImageButton extends React.Component {
     if (file.type.indexOf('image/') === 0) {
       // console.log(this.props.getEditorState());
       // eslint-disable-next-line no-undef
-      const src = URL.createObjectURL(file);
-      this.props.setEditorState(addNewBlock(
-        this.props.getEditorState(),
-        Block.IMAGE, {
-          src,
-        }
-      ));
+      this.getBase64(file).then(src => {
+        this.props.setEditorState(addNewBlock(
+          this.props.getEditorState(),
+          Block.IMAGE, {
+            src,
+          }
+        ));
+        this.props.close();
+      });
+    } else {
+      this.props.close();
     }
-    this.props.close();
+  }
+
+  getBase64(file) {
+    return new Promise((resolve, reject) => {
+      const reader = new window.FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = () => resolve(reader.result);
+      reader.onerror = error => reject(error);
+    });
   }
 
   render() {
