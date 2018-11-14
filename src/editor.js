@@ -45,6 +45,7 @@ some key handling for ease of use so that users' mouse usage is minimum.
 class MediumDraftEditor extends React.Component {
 
   static propTypes = {
+    isFocused: PropTypes.bool,
     beforeInput: PropTypes.func,
     keyBindingFn: PropTypes.func,
     customStyleMap: PropTypes.object,
@@ -517,8 +518,8 @@ class MediumDraftEditor extends React.Component {
   Renders the `Editor`, `Toolbar` and the side `AddButton`.
   */
   render() {
-    const { editorState, editorEnabled, disableToolbar, showLinkEditToolbar, toolbarConfig } = this.props;
-    const showAddButton = editorEnabled;
+    const { editorState, editorEnabled, disableToolbar, showLinkEditToolbar, toolbarConfig, isFocused } = this.props;
+    const showAddButton = editorEnabled && isFocused;
     const editorClass = `md-RichEditor-editor${!editorEnabled ? ' md-RichEditor-readonly' : ''}`;
     let isCursorLink = false;
     if (editorEnabled && showLinkEditToolbar) {
